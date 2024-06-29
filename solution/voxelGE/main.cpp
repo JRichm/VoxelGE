@@ -39,8 +39,8 @@ void processInput(GLFWwindow* window);
 
 glm::vec3 screenToWorldRay(float mouseX, float mouseY, const glm::mat4& view, const glm::mat4& projection, int screenWidth, int screenHeight);
 bool intersectRayWithCubeFace(const glm::vec3& rayOrigin, const glm::vec3& rayDir, const glm::vec3& cubePos, const glm::vec3& faceNormal, float& t);
-void highlightIntersectedFace(const glm::vec3& rayOrigin, const glm::vec3& rayDir, const glm::vec3& cubePos);
-void drawHighlightedFace(const glm::vec3& cubePos, const glm::vec3& faceNormal);
+void highlightIntersectedFace(const glm::vec3& rayOrigin, const glm::vec3& rayDir, const glm::vec3& cubePos, Shader shader);
+void drawHighlightedFace(const glm::vec3& cubePos, const glm::vec3& faceNormal, Shader shader);
 
 
 int main() {
@@ -153,6 +153,7 @@ int main() {
 			shader.setVec3("color", voxel.color);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
+			highlightIntersectedFace(camera.position, rayDir, glm::vec3(voxel.position), shader);
 		}
 
 		glBindVertexArray(0);
@@ -256,21 +257,21 @@ bool intersectRayWithCubeFace(const glm::vec3& rayOrigin, const glm::vec3& rayDi
 	return false;
 }
 
-void highlightIntersectedFace(const glm::vec3& rayOrigin, const glm::vec3& rayDir, const glm::vec3& cubePos) {
+void highlightIntersectedFace(const glm::vec3& rayOrigin, const glm::vec3& rayDir, const glm::vec3& cubePos, Shader shader) {
 	std::vector<glm::vec3> faceNormals = {
-		glm::vec3(0.0f, 0.0f, -1.0f),
-		glm::vec3(0.0f, 0.0f, 1.0f),
-		glm::vec3(-0.0f, -1.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f),
-		glm::vec3(-1.0f, 0.0f, 0.0f),
-		glm::vec3(1.0f, 0.0f, 0.0f)
+		glm::vec3(0.0f, 0.0f, -1.0f), // -Z
+		glm::vec3(0.0f, 0.0f, 1.0f),  // +Z
+		glm::vec3(0.0f, -1.0f, 0.0f), // -Y
+		glm::vec3(0.0f, 1.0f, 0.0f),  // +Y
+		glm::vec3(-1.0f, 0.0f, 0.0f), // -X
+		glm::vec3(1.0f, 0.0f, 0.0f)   // +X
 	};
 
 	float t;
 	bool intersected = false;
 	glm::vec3 intersectedNormal;
 	for (const auto& normal : faceNormals) {
-		if (intersectRayWithCubeFace(rayOrigin, rayDir, cubePos + normal * 0.5f, normal, t)) {
+		if (intersectRayWithCubeFace(rayOrigin, rayDir, cubePos, normal, t)) {
 			intersected = true;
 			intersectedNormal = normal;
 			break;
@@ -278,13 +279,87 @@ void highlightIntersectedFace(const glm::vec3& rayOrigin, const glm::vec3& rayDi
 	}
 
 	if (intersected) {
-		// highlight the intersected face
-		// draw the face with a different color or outline it
-		drawHighlightedFace(cubePos, intersectedNormal);
+		drawHighlightedFace(cubePos, intersectedNormal, shader);
 	}
 }
 
-void drawHighlightedFace(const glm::vec3& cubePos, const glm::vec3& faceNormal) {
+void drawHighlightedFace(const glm::vec3& cubePos, const glm::vec3& faceNormal, Shader shader) {
 	// implement drawing code to highlight the face based on the normal direction
 	// this can involve setting a different color for the face vartices or drawing and outline
+	glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	glm::vec3 v0, v1, v2, v3;
+
+	// -Z
+	if (faceNormal == glm::vec3(0.0f, 0.0f, -1.0f)) {
+		v0 = cubePos + glm::vec3(-0.5f, -0.5f, -0.5f);
+		v1 = cubePos + glm::vec3(0.5f, -0.5f, -0.5f);
+		v2 = cubePos + glm::vec3(0.5f, 0.5f, -0.5f);
+		v3 = cubePos + glm::vec3(-0.5f, 0.5f, -0.5f);
+	}
+
+	// +Z
+	else if (faceNormal == glm::vec3(0.0f, 0.0f, 1.0f)) {
+		v0 = cubePos + glm::vec3(-0.5f, -0.5f, 0.5f);
+		v1 = cubePos + glm::vec3(0.5f, -0.5f, 0.5f);
+		v2 = cubePos + glm::vec3(0.5f, 0.5f, 0.5f);
+		v3 = cubePos + glm::vec3(-0.5f, 0.5f, 0.5f);
+	}
+
+	// -Y
+	else if (faceNormal == glm::vec3(0.0f, -1.0f, 0.0f)) {
+		v0 = cubePos + glm::vec3(-0.5f, -0.5f, -0.5f);
+		v1 = cubePos + glm::vec3(0.5f, -0.5f, -0.5f);
+		v2 = cubePos + glm::vec3(0.5f, -0.5f, 0.5f);
+		v3 = cubePos + glm::vec3(-0.5f, -0.5f, 0.5f);
+	}
+
+	// +Y
+	else if (faceNormal == glm::vec3(0.0f, 1.0f, 0.0f)) {
+		v0 = cubePos + glm::vec3(-0.5f, 0.5f, -0.5f);
+		v1 = cubePos + glm::vec3(0.5f, 0.5f, -0.5f);
+		v2 = cubePos + glm::vec3(0.5f, 0.5f, 0.5f);
+		v3 = cubePos + glm::vec3(-0.5f, 0.5f, 0.5f);
+	}
+
+	// -X
+	else if (faceNormal == glm::vec3(-1.0f, 0.0f, 0.0f)) {
+		v0 = cubePos + glm::vec3(-0.5f, -0.5f, -0.5f);
+		v1 = cubePos + glm::vec3(-0.5f, 0.5f, -0.5f);
+		v2 = cubePos + glm::vec3(-0.5f, 0.5f, 0.5f);
+		v3 = cubePos + glm::vec3(-0.5f, -0.5f, 0.5f);
+	}
+
+	// +X
+	else if (faceNormal == glm::vec3(1.0f, 0.0f, 0.0f)) {
+		v0 = cubePos + glm::vec3(0.5f, -0.5f, -0.5f);
+		v1 = cubePos + glm::vec3(0.5f, 0.5f, -0.5f);
+		v2 = cubePos + glm::vec3(0.5f, 0.5f, 0.5f);
+		v3 = cubePos + glm::vec3(0.5f, -0.5f, 0.5f);
+	}
+
+	glm::vec3 vertices[] = {
+		 v0, v1, v2,
+		 v2, v3, v0,
+	};
+
+	unsigned int hl_VAO, hl_VBO;
+	glGenVertexArrays(1, &hl_VAO);
+	glGenBuffers(1, &hl_VBO);
+
+	glBindVertexArray(hl_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, hl_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	shader.setVec3("color", color);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	glDeleteBuffers(1, &hl_VBO);
+	glDeleteVertexArrays(1, &hl_VAO);
 }
