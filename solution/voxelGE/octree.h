@@ -39,6 +39,8 @@ struct Voxel {
     glm::vec3 color;
 
     Voxel(glm::vec3 pos, glm::vec3 col) : position(pos), color(col) {}
+
+    static const float vertices[108];
 };
 
 class OctreeNode {
