@@ -15,31 +15,30 @@ enum Camera_Movement {
     RIGHT,
     UP,
     DOWN,
-    RUN
 };
 
 class Camera {
 public:
-    glm::vec3 Position;
-    glm::vec3 Front;
-    glm::vec3 Up;
-    glm::vec3 Right;
-    glm::vec3 WorldUp;
+    glm::vec3 position;
+    glm::vec3 front;
+    glm::vec3 up;
+    glm::vec3 right;
+    glm::vec3 worldUp;
 
-    float Yaw;
-    float Pitch;
+    float yaw;
+    float pitch;
 
-    float MovementSpeed;
-    float MouseSensitivity;
-    float Zoom;
+    float movementSpeed;
+    float mouseSensitivity;
+    float zoom;
 
     Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
 
-    glm::mat4 GetViewMatrix();
+    glm::mat4 getViewMatrix();
 
-    void ProcessKeyboard(Camera_Movement direction, bool shifting, float deltaTime);
-    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
-    void ProcessMouseScroll(float yoffset);
+    void processKeyboard(Camera_Movement direction, bool shifting, float deltaTime);
+    void processMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
+    void processMouseScroll(float yoffset);
 
 private:
     void updateCameraVectors();
