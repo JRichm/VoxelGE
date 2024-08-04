@@ -127,7 +127,7 @@ const float Voxel::vertices[108] = {
      0.5f, -0.5f, -0.5f,
      0.5f, -0.5f,  0.5f,
      0.5f,  0.5f,  0.5f,
-     
+
      // bottom
     -0.5f, -0.5f, -0.5f,
      0.5f, -0.5f, -0.5f,
