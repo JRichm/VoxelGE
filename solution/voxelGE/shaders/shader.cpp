@@ -38,9 +38,11 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     char infoLog[512];
 
     vertex = glCreateShader(GL_VERTEX_SHADER);
+
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+
     if (!success)
     {
         glGetShaderInfoLog(vertex, 512, NULL, infoLog);
