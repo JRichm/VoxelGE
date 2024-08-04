@@ -35,8 +35,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
-
-
 glm::vec3 screenToWorldRay(float mouseX, float mouseY, const glm::mat4& view, const glm::mat4& projection, int screenWidth, int screenHeight);
 bool intersectRayWithCubeFace(const glm::vec3& rayOrigin, const glm::vec3& rayDir, const glm::vec3& cubePos, const glm::vec3& faceNormal, float& t);
 void highlightIntersectedFace(const glm::vec3& rayOrigin, const glm::vec3& rayDir, const glm::vec3& cubePos, Shader shader);
@@ -82,8 +80,11 @@ int main() {
 
 	// Define vertices and VAO
 	std::vector<Voxel> voxels = {
-		Voxel(glm::ivec3(0, 0, 0), glm::vec3(0.25f, 0.57f, 0.98f)),
+		//Voxel(glm::ivec3(0, 0, 0), glm::vec3(0.25f, 0.57f, 0.98f)),
 		Voxel(glm::ivec3(1, 1, 1), glm::vec3(0.25f, 0.30f, 0.98f)),
+		Voxel(glm::ivec3(2, 2, 2), glm::vec3(0.25f, 0.30f, 0.98f)),
+		Voxel(glm::ivec3(3, 3, 3), glm::vec3(0.25f, 0.30f, 0.98f)),
+		Voxel(glm::ivec3(4, 4, 4), glm::vec3(0.25f, 0.30f, 0.98f)),
 		// Add more vertices as needed
 	};
 
