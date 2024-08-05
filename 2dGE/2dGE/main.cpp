@@ -42,7 +42,7 @@ void displayGrid() {
 }
 
 int main() {
-	grid[15][15] = '* ';
+	grid[15][15] = "* ";
 
 	while (true) {
 		displayGrid();
