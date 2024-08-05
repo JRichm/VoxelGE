@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
+
+#include <cstdlib>
 
 // i need to output a matrix to the console
 // 1. first need to display just zeros, in a visual way
@@ -27,20 +30,33 @@
 int WIDTH = 30;
 int HEIGHT = 30;
 
+std::vector<std::vector<std::string>> grid(WIDTH, std::vector<std::string>(HEIGHT, ". "));
 
- int main() {
-	 std::string out = "";
-
-	 for (int h = 0; h < HEIGHT; h++) {
-		std::string row = "";
-
+void displayGrid() {
+	for (int h = 0; h < HEIGHT; h++) {
 		for (int w = 0; w < WIDTH; w++) {
-			row.append(". ");
+			std::cout << grid[w][h];
 		}
-		row.append("\n");
-		out.append(row);
-	 }
+		std::cout << std::endl;
+	}
+}
 
-	 std::cout << out << std::endl;
-	 return 1;
+int main() {
+	grid[15][15] = '* ';
+
+	while (true) {
+		displayGrid();
+
+		char command;
+		std::cin >> command;
+
+		switch (command) {
+			case 'q':
+				return 0;
+			default:
+				break;
+		}
+
+		return 1;
+	}
 }
