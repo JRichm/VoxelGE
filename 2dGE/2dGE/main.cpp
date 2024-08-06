@@ -31,15 +31,15 @@
 // test and figure out how
 
 
-int WIDTH = 30;
-int HEIGHT = 30;
+const int GRID_SIZE = 30;
 
-std::vector<std::vector<std::string>> grid(WIDTH, std::vector<std::string>(HEIGHT, ". "));
+std::vector<std::vector<std::string>> grid(GRID_SIZE, std::vector<std::string>(GRID_SIZE, ". "));
 
-void displayGrid() {
-	for (int h = 0; h < HEIGHT; h++) {
-		for (int w = 0; w < WIDTH; w++) {
-			std::cout << grid[w][h];
+
+void displayGrid(std::string grid[GRID_SIZE][GRID_SIZE]) {
+	for (int i = 0; i < GRID_SIZE; ++i) {
+		for (int j = 0; j < GRID_SIZE; ++j) {
+			std::cout << grid[i][j] << ' ';
 		}
 		std::cout << std::endl;
 	}
@@ -49,6 +49,13 @@ int x = 15;
 int y = 15;
 
 int main() {
+	std::string grid[GRID_SIZE][GRID_SIZE] = {};
+	for (int i = 0; i < GRID_SIZE; ++i) {
+		for (int j = 0; j < GRID_SIZE; ++j) {
+			grid[i][j] = ". ";
+		}
+	}
+	grid[x][y] = '* ';
 
 	while (true) {
 
@@ -60,21 +67,26 @@ int main() {
 
 			switch (command) {
 				case 'q':
-					break;
+					return 0;
 				case 'w':
-					y--;
+					y = (y > 0) ? y - 1 : y;
+					break;
 				case 'a':
-					x--;
+					x = (x > 0) ? x - 1 : x;
+					break;
 				case 's':
-					y++;
+					y = (y < GRID_SIZE - 1) ? y + 1 : y;
+					break;
 				case 'd':
-					x++;
+					x = (x < GRID_SIZE - 1) ? x + 1 : x;
+					break;
 			}
 
 			grid[x][y] = "* ";
 		}
 
-		displayGrid();
+		displayGrid(grid);
+		std::cout << x << ',' << y << std::endl;
 
 		Sleep(500);
 
