@@ -1,9 +1,13 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <vector>
 
+#include <windows.h>
 
 #include <cstdlib>
+#include <conio.h>
+
+
 
 // i need to output a matrix to the console
 // 1. first need to display just zeros, in a visual way
@@ -41,22 +45,39 @@ void displayGrid() {
 	}
 }
 
+int x = 15;
+int y = 15;
+
 int main() {
-	grid[15][15] = "* ";
 
 	while (true) {
-		displayGrid();
 
-		char command;
-		std::cin >> command;
+		system("cls");
 
-		switch (command) {
-			case 'q':
-				return 0;
-			default:
-				break;
+		if (_kbhit()) {
+			char command = _getch();
+			std::cout << command << std::endl;
+
+			switch (command) {
+				case 'q':
+					break;
+				case 'w':
+					y--;
+				case 'a':
+					x--;
+				case 's':
+					y++;
+				case 'd':
+					x++;
+			}
+
+			grid[x][y] = "* ";
 		}
 
-		return 1;
+		displayGrid();
+
+		Sleep(500);
+
 	}
+	return 1;
 }
