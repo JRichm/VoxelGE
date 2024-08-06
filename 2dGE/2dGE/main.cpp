@@ -39,7 +39,7 @@ std::vector<std::vector<std::string>> grid(GRID_SIZE, std::vector<std::string>(G
 void displayGrid(std::string grid[GRID_SIZE][GRID_SIZE]) {
 	for (int i = 0; i < GRID_SIZE; ++i) {
 		for (int j = 0; j < GRID_SIZE; ++j) {
-			std::cout << grid[i][j] << ' ';
+			std::cout << grid[j][i] << ' ';
 		}
 		std::cout << std::endl;
 	}
