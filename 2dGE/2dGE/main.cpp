@@ -48,13 +48,8 @@ void displayGrid(std::string grid[GRID_SIZE][GRID_SIZE]) {
 int x = 15;
 int y = 15;
 
+std::string grid[GRID_SIZE][GRID_SIZE] = {};
 int main() {
-	std::string grid[GRID_SIZE][GRID_SIZE] = {};
-	for (int i = 0; i < GRID_SIZE; ++i) {
-		for (int j = 0; j < GRID_SIZE; ++j) {
-			grid[i][j] = ". ";
-		}
-	}
 	grid[x][y] = '* ';
 
 	while (true) {
