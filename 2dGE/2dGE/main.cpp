@@ -33,23 +33,22 @@
 
 const int GRID_SIZE = 30;
 
-std::vector<std::vector<std::string>> grid(GRID_SIZE, std::vector<std::string>(GRID_SIZE, ". "));
-
-
-void displayGrid(std::string grid[GRID_SIZE][GRID_SIZE]) {
+void displayGrid(const std::vector<std::vector<std::string>>& grid) {
 	for (int i = 0; i < GRID_SIZE; ++i) {
 		for (int j = 0; j < GRID_SIZE; ++j) {
-			std::cout << grid[j][i] << ' ';
+			std::cout << grid[j][i];
 		}
 		std::cout << std::endl;
 	}
 }
 
-int x = 15;
-int y = 15;
-
 std::string grid[GRID_SIZE][GRID_SIZE] = {};
 int main() {
+	std::vector<std::vector<std::string>> grid(GRID_SIZE, std::vector<std::string>(GRID_SIZE, ". "));
+
+	int x = 15;
+	int y = 15;
+
 	grid[x][y] = '* ';
 
 	while (true) {
@@ -59,6 +58,8 @@ int main() {
 		if (_kbhit()) {
 			char command = _getch();
 			std::cout << command << std::endl;
+			
+			grid[y][x] = ". ";
 
 			switch (command) {
 				case 'q':
