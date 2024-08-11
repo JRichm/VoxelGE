@@ -31,61 +31,124 @@
 // test and figure out how
 
 
-const int GRID_SIZE = 30;
+// CONWAYS GAME OF LIFE RULES
 
-void displayGrid(const std::vector<std::vector<std::string>>& grid) {
-	for (int i = 0; i < GRID_SIZE; ++i) {
-		for (int j = 0; j < GRID_SIZE; ++j) {
-			std::cout << grid[j][i];
+	// 1) any live cell with < 2 live neighbors dies (underpopulation)
+	// 2) any live cell with two or three live neighbors lives
+	// 3) any live cell with more than three live neighbors dies (overpopulation)
+	// 4) any dead cell with exactly three live neighbors becomes a live cell (reproduction)
+
+
+
+class Grid {
+private:
+	std::vector<std::string> grid;
+	std::vector<std::string> bufferGrid;
+	int width, height;
+
+public:
+	Grid(int w, int h) : width(w), height(h) {
+		grid = clearedGrid(w, h);
+		bufferGrid = clearedGrid(w, h);
+
+		bufferGrid[25][24 * 2] = '*';
+		bufferGrid[25][24 * 2 + 1] = ' ';
+
+		bufferGrid[25][25 * 2] = '*';
+		bufferGrid[25][25 * 2 + 1] = ' ';
+
+		bufferGrid[25][26 * 2] = '*';
+		bufferGrid[25][26 * 2 + 1] = ' ';
+
+		bufferGrid[24][25 * 2] = '*';
+		bufferGrid[24][25 * 2 + 1] = ' ';
+
+		bufferGrid[26][26 * 2] = '*';
+		bufferGrid[26][26 * 2 + 1] = ' ';
+
+		grid = bufferGrid;
+	};
+
+	std::vector<std::string> clearedGrid(int w, int h) {
+		std::vector<std::string> clearedGrid = std::vector<std::string>(h, std::string(w * 2, '.'));
+		for (auto& row : clearedGrid) {
+			for (int i = 0; i < w; ++i) {
+				row[i * 2] = '.';
+				row[i * 2 + 1] = ' ';
+			}
+		};
+		return clearedGrid;
+	};
+
+	std::string getCell(int x, int y) const {
+		if (x >= 0 && x < height && y >= 0 && y < width) {
+			return grid[x].substr(y * 2, 2);
 		}
-		std::cout << std::endl;
+		return "";
+	};
+
+	void setCell(int x, int y, char value) {
+		if (x >= 0 && x < height && y >= 0 && y < width) {
+			bufferGrid[x][y * 2] = value;
+			bufferGrid[x][y * 2 + 1] = ' ';
+		}
 	}
-}
 
-std::string grid[GRID_SIZE][GRID_SIZE] = {};
+	int countNeighbors(int x, int y) {
+		int count = 0;
+		for (int i = -1; i <= 1; ++i) {
+			for (int j = -1; j <= 1; ++j) {
+				if (i == 0 && j == 0) continue;
+				if (getCell(x + i, y + j) == "* ") {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	void displayGrid() const {
+		system("cls");
+		for (const auto& row : grid) {
+			std::cout << row << '\n';
+		}
+	}
+
+	void updateGrid() {
+		bufferGrid = clearedGrid(height, width);
+
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				int count = countNeighbors(i, j);
+				std::string currentCell = getCell(i, j);
+
+				if (currentCell == "* ") {
+					if (count < 2 || count > 3) {
+						setCell(i, j, '.');
+					} else {
+						setCell(i, j, '*');
+					}
+				} else {
+					if (count == 3) {
+						setCell(i, j, '*');
+					}
+				}
+			}
+		}
+		grid = bufferGrid;
+	}
+};
+
 int main() {
-	std::vector<std::vector<std::string>> grid(GRID_SIZE, std::vector<std::string>(GRID_SIZE, ". "));
 
-	int x = 15;
-	int y = 15;
+	Grid grid(50, 50);
 
-	grid[x][y] = '* ';
+	grid.displayGrid();
 
 	while (true) {
-
-		system("cls");
-
-		if (_kbhit()) {
-			char command = _getch();
-			std::cout << command << std::endl;
-			
-			grid[y][x] = ". ";
-
-			switch (command) {
-				case 'q':
-					return 0;
-				case 'w':
-					y = (y > 0) ? y - 1 : y;
-					break;
-				case 'a':
-					x = (x > 0) ? x - 1 : x;
-					break;
-				case 's':
-					y = (y < GRID_SIZE - 1) ? y + 1 : y;
-					break;
-				case 'd':
-					x = (x < GRID_SIZE - 1) ? x + 1 : x;
-					break;
-			}
-
-			grid[x][y] = "* ";
-		}
-
-		displayGrid(grid);
-		std::cout << x << ',' << y << std::endl;
-
-		Sleep(500);
-
+		grid.updateGrid();
+		grid.displayGrid();
+		Sleep(1);
 	}
 	return 1;
 }
