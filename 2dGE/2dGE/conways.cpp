@@ -139,7 +139,7 @@ public:
 	}
 };
 
-int main() {
+int main2() {
 
 	Grid grid(50, 50);
 
