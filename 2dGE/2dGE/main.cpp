@@ -10,6 +10,15 @@
 GLFWwindow* window;
 bool running = false;
 
+
+float vertices[] = {
+	-0.3f, -0.3f, 0.0f,
+	0.3f, -0.3f, 0.0f,
+	0.3f, 0.3f, 0.0f,
+	-0.3f, 0.3f, 0.0f
+};
+
+
 void processInput() {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		running = false;
@@ -63,9 +72,9 @@ int main() {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	// need to fill buffer with pixel/square data here
-	// glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0); // think this sets the vertex array offset, nothing until we get the array of vertices
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); // think this sets the vertex array offset, nothing until we get the array of vertices
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
