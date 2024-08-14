@@ -81,6 +81,10 @@ int main() {
 	running = true;
 
 	while (running) {
+		if (glfwWindowShouldClose(window)) {
+			running = false;
+		}
+
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -93,4 +97,12 @@ int main() {
 		glfwPollEvents();
 		processInput();
 	}
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
+	return 0;
 }
