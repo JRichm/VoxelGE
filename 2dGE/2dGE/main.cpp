@@ -62,8 +62,6 @@ int main() {
 	Shader shader = Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 	shader.use();
 
-	running = true;
-
 	GLuint VAO, VBO;
 
 	glGenVertexArrays(1, &VAO);
@@ -80,10 +78,16 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+	running = true;
 
 	while (running) {
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		shader.use();
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
