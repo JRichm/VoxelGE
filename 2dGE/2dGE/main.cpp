@@ -44,20 +44,11 @@ int main() {
 	}
 
 	glfwMakeContextCurrent(window);
-	//glfwSetWindowUserPointer(window, this); NOT SURE WHAT THIS DOES. THINK IT IS USED WHEN USING THE 'RENDERER' CLASS OR SIMILAR
-
-	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); CHANGE WINDOW SIZE
-	//glfwSetCursorPosCallback(window, mouse_callback);	MOUSE MOVEMENT
-	//glfwSetScrollCallback(window, scroll_callback); SCROLL
-
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); ENABLE MOUSE CURSUR INPUT
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return false;
 	}
-
-	//glEnable(GL_DEPTH_TEST);
 
 	Shader shader = Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 	shader.use();
