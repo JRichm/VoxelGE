@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #include <glm/glm.hpp>
 
@@ -11,21 +13,40 @@ GLFWwindow* window;
 bool running = false;
 
 float vertices[] = {
-	0.0f, -0.1f, 0.0f,
-	0.1f, -0.1f, 0.0f,
-	0.1f, 0.0f, 0.0f,
+	0.0f, -0.05f, 0.0f,
+	0.05f, -0.05f, 0.0f,
+	0.05f, 0.0f, 0.0f,
 	0.0f, 0.0f, 0.0f
 };
 
-const int numSquares = 5;
+const int screenWidth = 800;
+const int screenHeight = 800;
+const int squareSize = 20;
+
+const int gridWidth = screenWidth / squareSize;
+const int gridHeight = screenHeight / squareSize;
+
+//float x = (12 / (float)gridWidth) * 2.0f - 1.0f; // what is NDC?
+//float y = (8 / (float)gridHeight) * 2.0f - 1.0f; // what is NDC?
+
+const int numSquares = 500;
 
 void processInput() {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		running = false;
 }
 
+float normalizeCordX(int gridX) {
+	return ((gridX + 2.0f) / (float)gridWidth) * 2.0f - 1.0f;
+}
+
+float normalizeCordY(int gridY) {
+	return ((gridY + 2.0f) / (float)gridHeight) * 2.0f - 1.0f;
+}
+
 int main() {
 	std::cout << "Starting 2dVoxGE..." << std::endl;
+	srand(static_cast<unsigned int>(time(0)));
 
 	if (!glfwInit()) {
 		std::cout << "Failed to initialize GLFW" << std::endl;
@@ -66,8 +87,12 @@ int main() {
 	// square positions
 	glm::mat4 models[numSquares];
 	for (unsigned int i = 0; i < numSquares; i++) {
-		float x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2.0f - 1.0f;
-		float y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2.0f - 1.0f;
+		int gridX = rand() % gridWidth;
+		int gridY = rand() % gridHeight;
+
+		float x = ((gridX + 0.5f) / (float)gridWidth) * 2.0f - 1.0f;
+		float y = ((gridY + 0.5f) / (float)gridHeight) * 2.0f - 1.0f;
+
 		models[i] = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
 	}
 
