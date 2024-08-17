@@ -13,10 +13,10 @@ GLFWwindow* window;
 bool running = false;
 
 float vertices[] = {
-	0.0f, -0.05f, 0.0f,
-	0.05f, -0.05f, 0.0f,
-	0.05f, 0.0f, 0.0f,
-	0.0f, 0.0f, 0.0f
+	-0.025f, -0.025f, 0.0f,
+	0.025f, -0.025f, 0.0f,
+	0.025f, 0.025f, 0.0f,
+	-0.025f, 0.025f, 0.0f
 };
 
 const int screenWidth = 800;
